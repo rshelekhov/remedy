@@ -1,0 +1,22 @@
+# Dockerfile for Remedy Test Runner
+
+FROM oven/bun:1 AS base
+WORKDIR /app
+
+# Install dependencies (including dev dependencies for tests)
+FROM base AS install
+RUN mkdir -p /temp/test
+COPY package.json bun.lock /temp/test/
+COPY prisma.config.ts /temp/test/
+COPY src/infrastructure/prisma/schema.prisma /temp/test/src/infrastructure/prisma/schema.prisma
+# Set placeholder DATABASE_URL for Prisma generation during install
+ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+RUN cd /temp/test && bun install --frozen-lockfile
+
+# Copy source and tests
+FROM base AS test
+COPY --from=install /temp/test/node_modules node_modules
+COPY . .
+
+# Default command runs tests
+CMD ["bun", "test", "tests/integration"]

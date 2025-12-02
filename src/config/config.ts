@@ -1,14 +1,37 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { config as dotenvConfig } from 'dotenv';
 import { z } from 'zod';
-import 'dotenv/config';
 
 export const NODE_ENV = {
   DEV: 'development',
   PROD: 'production',
   LOCAL: 'local',
+  TEST: 'test',
 } as const;
 
+// Load .env files only when:
+// - Not in production (12-factor app pattern)
+// - Not explicitly disabled (e.g., in Docker where env vars are already set)
+if (process.env.SKIP_DOTENV_LOAD !== 'true' && process.env.NODE_ENV !== NODE_ENV.PROD) {
+  const envFile = process.env.NODE_ENV === NODE_ENV.TEST ? '.env.test' : '.env.local';
+  // Get the directory of this module file (ESM compatible)
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const envPath = resolve(__dirname, '../../config', envFile);
+
+  const result = dotenvConfig({ path: envPath, override: true });
+
+  if (result.error) {
+    console.warn(`Warning: Could not load ${envFile} from ${envPath}`);
+  }
+}
+// In production and Docker, environment variables are provided by the deployment platform
+
 const envSchema = z.object({
-  NODE_ENV: z.enum([NODE_ENV.DEV, NODE_ENV.PROD, NODE_ENV.LOCAL]).default(NODE_ENV.DEV),
+  NODE_ENV: z
+    .enum([NODE_ENV.DEV, NODE_ENV.PROD, NODE_ENV.LOCAL, NODE_ENV.TEST])
+    .default(NODE_ENV.DEV),
   PORT: z.string().default('3000'),
   DATABASE_URL: z.url(),
   SSO_CLIENT_ID: z.string(),
@@ -34,6 +57,7 @@ export function createConfig(env: NodeJS.ProcessEnv = process.env) {
       isDev: validated.NODE_ENV === NODE_ENV.DEV,
       isProd: validated.NODE_ENV === NODE_ENV.PROD,
       isLocal: validated.NODE_ENV === NODE_ENV.LOCAL,
+      isTest: validated.NODE_ENV === NODE_ENV.TEST,
       port: validated.PORT,
       sso: {
         apiUrl: validated.SSO_API_URL,

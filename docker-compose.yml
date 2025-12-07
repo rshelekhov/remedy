@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: remedy-postgres
+    environment:
+      POSTGRES_USER: remedy
+      POSTGRES_PASSWORD: remedy
+      POSTGRES_DB: remedy
+    ports:
+      - "5433:5432"  # 5433 to avoid conflicts with other postgres instances
+    volumes:
+      - remedy-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U remedy"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  remedy-data:

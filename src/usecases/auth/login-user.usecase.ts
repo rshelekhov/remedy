@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
-import type { PinoLogger } from 'hono-pino';
 import { SSOError } from '@rshelekhov/sso-sdk';
+import type { PinoLogger } from 'hono-pino';
 import { InvalidCredentialsError } from '../../errors/domain-errors';
 import type { AuthTokens, DeviceContext, ISSOService } from '../../infrastructure/ports/sso.port';
 

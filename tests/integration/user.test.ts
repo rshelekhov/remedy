@@ -284,6 +284,5 @@ describe('User Integration Tests', () => {
       // Document as requiring mock or time manipulation
       expect(true).toBe(true); // Placeholder
     });
-
   });
 });

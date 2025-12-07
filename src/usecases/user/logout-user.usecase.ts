@@ -1,4 +1,3 @@
-import { SSOError } from '@rshelekhov/sso-sdk';
 import type { PinoLogger } from 'hono-pino';
 import type { DeviceContext, ISSOService } from '../../infrastructure/ports/sso.port';
 
@@ -25,9 +24,12 @@ export class LogoutUserUsecase {
     } catch (error) {
       // Make logout idempotent - if session is already gone, treat as success
       // Check for "session not found" error (code 16 = ERROR_CODE_SESSION_NOT_FOUND)
-      const errorCode = (error as any)?.code;
-      const errorMessage = (error as any)?.message || '';
-      const statusCode = (error as any)?.statusCode;
+      const errorCode =
+        error && typeof error === 'object' && 'code' in error ? error.code : undefined;
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error ? String(error.message) : '';
+      const statusCode =
+        error && typeof error === 'object' && 'statusCode' in error ? error.statusCode : undefined;
 
       if (
         errorCode === '16' ||

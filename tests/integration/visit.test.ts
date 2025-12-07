@@ -1073,13 +1073,7 @@ describe('Visit Integration Tests', () => {
       testFamilies.push(family1.id);
 
       // Add user2 as a member in user1's family
-      const _user2Member = await createTestMemberDirect(
-        prisma,
-        family1.id,
-        user2.name,
-        'Sibling',
-        user2.userId
-      );
+      void (await createTestMemberDirect(prisma, family1.id, user2.name, 'Sibling', user2.userId));
 
       // Create another member (not linked to user2)
       const member = await createTestMember(client, user1, family1);

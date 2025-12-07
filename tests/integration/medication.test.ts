@@ -6,10 +6,7 @@ import type {
 import { createTestClient } from '../helpers/test-client';
 import { getTestPrisma } from '../helpers/test-db';
 import { cleanupTestFamily, createTestFamily } from '../helpers/test-family';
-import {
-  cleanupTestMedication,
-  createTestMedication,
-} from '../helpers/test-medication';
+import { cleanupTestMedication, createTestMedication } from '../helpers/test-medication';
 import { createTestMember } from '../helpers/test-member';
 
 import { cleanupTestUser, createAuthenticatedUser } from '../helpers/test-user';

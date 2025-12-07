@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun --watch ./src/index.ts",
     "start": "bun ./src/index.ts",
+    "build": "bun run build.ts",
     "postinstall": "prisma generate",
     "format": "./node_modules/@biomejs/cli-darwin-arm64/biome format --write .",
     "format:check": "./node_modules/@biomejs/cli-darwin-arm64/biome format .",
@@ -15,19 +16,41 @@
     "check:ci": "./node_modules/@biomejs/cli-darwin-arm64/biome ci .",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "test:server:up": "docker compose -f docker-compose.test.yml up -d --build",
+    "test:server:down": "docker compose -f docker-compose.test.yml down -v",
+    "test:server:logs": "docker compose -f docker-compose.test.yml logs -f",
+    "test:db:migrate": "DATABASE_URL=postgresql://remedy_test:remedy_test@localhost:5434/remedy_test prisma migrate deploy",
+    "test:db:reset": "DATABASE_URL=postgresql://remedy_test:remedy_test@localhost:5434/remedy_test prisma migrate reset --force",
+    "test": "NODE_ENV=test bun test",
+    "test:integration": "NODE_ENV=test bun test tests/integration",
+    "test:watch": "NODE_ENV=test bun test --watch tests/integration"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.6",
+    "@faker-js/faker": "^10.1.0",
     "@types/bun": "latest",
+    "@types/pg": "^8.15.6",
+    "bun-plugin-pino": "^1.4.0",
+    "pino-pretty": "^13.1.2",
     "prisma": "^7.0.0"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.943.0",
+    "@aws-sdk/s3-request-presigner": "^3.943.0",
+    "@hono/swagger-ui": "^0.5.2",
+    "@hono/zod-openapi": "^1.1.5",
+    "@hono/zod-validator": "^0.7.5",
+    "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.0.0",
-    "@rshelekhov/sso-sdk": "^0.1.1",
-    "hono": "^4.10.6"
+    "@rshelekhov/sso-sdk": "0.3.0",
+    "hono": "^4.10.6",
+    "hono-pino": "^0.10.3",
+    "pg": "^8.16.3",
+    "pino": "^10.1.0",
+    "zod": "^4.1.13"
   }
 }

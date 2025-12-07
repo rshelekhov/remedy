@@ -1,5 +1,5 @@
-import { SSOService } from './sso.service';
 import type { ISSOService } from '../ports/sso.port';
+import { SSOService } from './sso.service';
 
 /**
  * SSO Service singleton instance

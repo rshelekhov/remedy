@@ -75,7 +75,7 @@ CREATE TABLE "Medication" (
     "name" TEXT NOT NULL,
     "dosage" TEXT,
     "frequency" TEXT,
-    "startDate" TIMESTAMP(3) NOT NULL,
+    "startDate" TIMESTAMP(3),
     "endDate" TIMESTAMP(3),
     "prescribingDoctor" TEXT,
     "notes" TEXT,

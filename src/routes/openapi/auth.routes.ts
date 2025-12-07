@@ -10,10 +10,7 @@ import {
   RequestPasswordResetSchema,
   VerifyEmailSchema,
 } from '../../schemas/auth.schema';
-import {
-  ErrorResponseSchema,
-  SuccessMessageSchema,
-} from '../../schemas/common.schema';
+import { ErrorResponseSchema, SuccessMessageSchema } from '../../schemas/common.schema';
 
 /**
  * OpenAPI Route Definitions for Auth Endpoints
@@ -83,6 +80,14 @@ export const loginRoute = createRoute({
         },
       },
       description: 'User logged in successfully',
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: 'Invalid request data',
     },
     401: {
       content: {
@@ -217,6 +222,14 @@ export const refreshTokensRoute = createRoute({
         },
       },
       description: 'Tokens refreshed successfully',
+    },
+    400: {
+      content: {
+        'application/json': {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: 'Invalid request data',
     },
     401: {
       content: {
